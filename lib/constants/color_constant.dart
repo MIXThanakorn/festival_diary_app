@@ -1,1 +1,1 @@
-const mainColor = 0xFF4F4F4F;
+const mainColor = 0xFF2196F3;

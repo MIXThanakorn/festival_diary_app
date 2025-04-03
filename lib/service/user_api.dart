@@ -1,6 +1,9 @@
 //user_api.dart
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:festival_diary_app/constants/baseurl_constanst.dart';
 import 'package:festival_diary_app/models/userTB.dart'; //แพ็กเกจที่รวมรวมคำสั่งที่เราใช้ติดต่อ API ที่ Backend Server
 
 class UserAPI {
@@ -25,7 +28,7 @@ class UserAPI {
 
       //เอาข้อมูลใน FormData ส่งไปผ่าน API ตาม Endpoint ที่ได้กำหนดไว้
       final responseData = await dio.post(
-        'http://192.168.1.18:6969/user/',
+        '${baseUrl}/user/',
         data: formData,
         options: Options(
           headers: {
@@ -44,6 +47,23 @@ class UserAPI {
     } catch (err) {
       print('Exception: ${err}');
       return false;
+    }
+  }
+
+  Future<User> checkLogin(User user) async {
+    try {
+      final responseData = await dio.get(
+        '${baseUrl}/user/${user.userName}/${user.userPassword}',
+      );
+
+      if (responseData.statusCode == 200) {
+        return User.fromJson(responseData.data['info']);
+      } else {
+        return User();
+      }
+    } catch (err) {
+      print('Exception: ${err}');
+      return User();
     }
   }
 }

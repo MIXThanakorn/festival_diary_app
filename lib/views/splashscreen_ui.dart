@@ -1,4 +1,5 @@
 import 'package:festival_diary_app/constants/color_constant.dart';
+import 'package:festival_diary_app/views/login_ui.dart';
 import 'package:flutter/material.dart';
 import 'home_ui.dart';
 
@@ -14,7 +15,7 @@ class _SplashscreenUIState extends State<SplashscreenUI> {
     Future.delayed(
         Duration(seconds: 3),
         () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeUI())));
+            context, MaterialPageRoute(builder: (context) => LoginUI())));
     super.initState();
   }
 
