@@ -51,7 +51,7 @@ class _HomeUIState extends State<HomeUI> {
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold), //stlye
             )
           ],
         ),
