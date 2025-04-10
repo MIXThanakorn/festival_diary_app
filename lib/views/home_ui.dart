@@ -1,6 +1,9 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:festival_diary_app/constants/baseurl_constanst.dart';
+import 'package:festival_diary_app/views/add_fest_ui.dart';
+import 'package:festival_diary_app/views/login_ui.dart';
+import 'package:festival_diary_app/views/user_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:festival_diary_app/constants/color_constant.dart';
 import 'package:festival_diary_app/models/userTB.dart';
@@ -22,6 +25,17 @@ class _HomeUIState extends State<HomeUI> {
       appBar: AppBar(
         backgroundColor: Color(mainColor),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginUI()));
+              },
+              icon: Icon(
+                Icons.exit_to_app_outlined,
+                color: Colors.red,
+              ))
+        ],
         title: Text(
           "Festival Diary",
           style: TextStyle(
@@ -50,12 +64,50 @@ class _HomeUIState extends State<HomeUI> {
               widget.user!.userFullname!,
               style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold), //stlye
-            )
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.005,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UserUI(
+                              user: widget.user,
+                            ))).then((value) {
+                  setState(() {
+                    widget.user = value;
+                  });
+                });
+              },
+              child: Text(
+                '(Edit Profile)',
+                style: TextStyle(fontSize: 12, color: Colors.red),
+              ),
+            ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Color(mainColor),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddFestUI(
+                        userId: widget.user!.userId!,
+                      )));
+        },
+        label: Text(
+          'Festival',
+          style: TextStyle(color: Colors.white),
+        ),
+        icon: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

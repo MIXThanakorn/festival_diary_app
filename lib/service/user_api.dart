@@ -66,4 +66,41 @@ class UserAPI {
       return User();
     }
   }
+
+  Future<User> updateUser(User user, File? userFile) async {
+    try {
+      //เอาข้อมูลใส่ FormData
+      final formData = FormData.fromMap({
+        'userFullname': user.userFullname,
+        'userName': user.userName,
+        'userPassword': user.userPassword,
+        if (userFile != null)
+          'userImage': await MultipartFile.fromFile(
+            userFile.path,
+            filename: userFile.path.split('/').last,
+            contentType: DioMediaType('image', userFile.path.split('.').last),
+          ),
+      });
+
+      //เอาข้อมูลใน FormData ส่งไปผ่าน API ตาม Endpoint ที่ได้กำหนดไว้
+      final responseData = await dio.put(
+        '${baseUrl}/user/${user.userId}',
+        data: formData,
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+
+      if (responseData.statusCode == 200) {
+        return User.fromJson(responseData.data['info']);
+      } else {
+        return User();
+      }
+    } catch (err) {
+      print('Exception: ${err}');
+      return User();
+    }
+  }
 }
