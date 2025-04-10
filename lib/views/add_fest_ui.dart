@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:festival_diary_app/service/fest_api.dart';
 import 'package:flutter/material.dart';
 import 'package:festival_diary_app/constants/color_constant.dart';
 import "package:image_picker/image_picker.dart";
+import 'package:festival_diary_app/models/festTB.dart';
 
 class AddFestUI extends StatefulWidget {
   int? userId;
@@ -13,6 +15,34 @@ class AddFestUI extends StatefulWidget {
 }
 
 class _AddFestUIState extends State<AddFestUI> {
+  TextEditingController festNameCtrl = TextEditingController(text: '');
+  TextEditingController festDetailCtrl = TextEditingController(text: '');
+  TextEditingController festNumdayCtrl = TextEditingController(text: '');
+  TextEditingController festCostCtrl = TextEditingController(text: '');
+  TextEditingController festStateCtrl = TextEditingController(text: '');
+
+  showwarningsnackbar(context, mes) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        mes,
+        textAlign: TextAlign.center,
+      ),
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.red,
+    ));
+  }
+
+  showcompletesnackbar(context, mes) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        mes,
+        textAlign: TextAlign.center,
+      ),
+      duration: Duration(seconds: 2),
+      backgroundColor: const Color.fromARGB(255, 6, 107, 9),
+    ));
+  }
+
   File? festFile;
   Future<void> openCamera() async {
     final img = await ImagePicker().pickImage(
@@ -103,6 +133,7 @@ class _AddFestUIState extends State<AddFestUI> {
                   height: MediaQuery.of(context).size.height * 0.015,
                 ),
                 TextField(
+                  controller: festNameCtrl,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.abc_sharp)),
@@ -124,6 +155,7 @@ class _AddFestUIState extends State<AddFestUI> {
                   height: MediaQuery.of(context).size.height * 0.015,
                 ),
                 TextField(
+                  controller: festDetailCtrl,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.deck_outlined)),
@@ -145,6 +177,8 @@ class _AddFestUIState extends State<AddFestUI> {
                   height: MediaQuery.of(context).size.height * 0.015,
                 ),
                 TextField(
+                  controller: festNumdayCtrl,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.timelapse)),
@@ -166,6 +200,8 @@ class _AddFestUIState extends State<AddFestUI> {
                   height: MediaQuery.of(context).size.height * 0.015,
                 ),
                 TextField(
+                  controller: festCostCtrl,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.money)),
@@ -187,6 +223,7 @@ class _AddFestUIState extends State<AddFestUI> {
                   height: MediaQuery.of(context).size.height * 0.015,
                 ),
                 TextField(
+                  controller: festStateCtrl,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.location_city)),
@@ -201,7 +238,44 @@ class _AddFestUIState extends State<AddFestUI> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         backgroundColor: Color(mainColor)),
-                    onPressed: () async {},
+                    onPressed: () async {
+                      if (festNameCtrl.text.trim().isEmpty) {
+                        showwarningsnackbar(
+                            context, 'Please enter Festival Name');
+                      } else if (festDetailCtrl.text.trim().isEmpty) {
+                        showwarningsnackbar(
+                            context, 'Please enter Festival Details');
+                      } else if (festNumdayCtrl.text.trim().isEmpty) {
+                        showwarningsnackbar(
+                            context, 'Please enter Festival Duration');
+                      } else if (festCostCtrl.text.trim().isEmpty) {
+                        showwarningsnackbar(
+                            context, 'Please enter Festival Cost');
+                      } else if (festStateCtrl.text.trim().isEmpty) {
+                        showwarningsnackbar(
+                            context, 'Please enter Festival State');
+                      } else {
+                        Fest fest = Fest(
+                          festName: festNameCtrl.text.trim(),
+                          festDetail: festDetailCtrl.text.trim(),
+                          festNumday: int.parse(festNumdayCtrl.text.trim()),
+                          festCost: int.parse(festCostCtrl.text.trim()),
+                          userId: widget.userId,
+                          festState: festStateCtrl.text.trim(),
+                        );
+                        if (await FestAPI().AddFest(fest, festFile)) {
+                          showcompletesnackbar(
+                            context,
+                            'Added successfully',
+                          );
+                        } else {
+                          showwarningsnackbar(
+                            context,
+                            'Added failed',
+                          );
+                        }
+                      }
+                    },
                     child: Text(
                       'Save',
                       style: TextStyle(

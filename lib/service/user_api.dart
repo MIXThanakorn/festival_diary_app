@@ -1,16 +1,11 @@
-//user_api.dart
-// ignore_for_file: unnecessary_brace_in_string_interps
-
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:festival_diary_app/constants/baseurl_constanst.dart';
-import 'package:festival_diary_app/models/userTB.dart'; //แพ็กเกจที่รวมรวมคำสั่งที่เราใช้ติดต่อ API ที่ Backend Server
+import 'package:festival_diary_app/models/userTB.dart';
 
 class UserAPI {
-  //สร้างออปเจ็กต์ dio เพื่อใช้เป็นตัวที่ติดต่อ API ที่ Backend Server
   final Dio dio = Dio();
 
-  //สร้างเมธอดเรียกใช้ API ลงทะเบียน (เพิ่มข้อมูล user)
   Future<bool> registerUser(User user, File? userFile) async {
     try {
       //เอาข้อมูลใส่ FormData
