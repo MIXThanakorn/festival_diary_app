@@ -3,7 +3,7 @@ class Fest {
   String? festName;
   String? festDetail;
   int? festNumday;
-  int? festCost;
+  double? festCost;
   int? userId;
   String? festState;
   String? festImage;
